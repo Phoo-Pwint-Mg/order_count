@@ -4,8 +4,11 @@ let today = new Date();
 let discount = false;
 let codeArray = [];
 let count = 0;
+let price = [];
+let quantity = [];
 $(document).ready(function () {
   initial();
+  checkWeekend();
 
   $(".card").click(function () {
     $(".cart").slideDown(2000);
@@ -15,7 +18,7 @@ $(document).ready(function () {
     let img = $(this).find("img").attr("src");
     let pname = $(this).find(".pname").text();
     let code = $(this).find(".code").text();
-    let price = $(this).find(".price").text();
+    let priceText = $(this).find(".price").text();
 
     for (let index = 0; index < codeArray.length; index++) {
       if (codeArray[index] == code) {
@@ -26,6 +29,8 @@ $(document).ready(function () {
 
     if (!alreadyExist) {
       codeArray.push(code);
+      quantity.push(1);
+      price.push(Number(priceText.replace("Ks ", "")));
 
       $(".calculateitem").append(`
       <div class="chooseItem">
@@ -47,11 +52,30 @@ $(document).ready(function () {
   $(document).on("click", ".chooseItem_bin", function () {
     codeArray[this.id] = "";
     $(this).closest(".chooseItem").remove();
+
     calculate();
   });
 });
 
-function calculate() {}
+function calculate() {
+  let itemPrice = 0;
+  let discountPrice = 0;
+  let grand = 0;
+
+  for (let index = 0; index < price.length; index++) {
+    itemPrice += price[index] * quantity[index];
+
+    // Getting Discount
+    if (discount) {
+      discountPrice = itemPrice * 0.15;
+      grand = itemPrice - discountPrice;
+    } else {
+      grand = itemPrice;
+    }
+    $("#discountprice").text(discountPrice);
+    $("#grand").text("Ks " + grand);
+  }
+}
 
 function initial() {
   $(".cart").hide();
@@ -62,7 +86,7 @@ function initial() {
 // Checking Weekend for discount
 function checkWeekend() {
   if (today.getDay() == 0 || today.getDay() == 6) {
-    if (today.getHours() >= 9 && today.getHours <= 17) {
+    if (today.getHours() >= 9 && today.getHours() <= 17) {
       // Get Discount
       $("#discounttitle").show();
       $("#discountprice").show();
