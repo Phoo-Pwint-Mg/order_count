@@ -92,6 +92,9 @@ $(document).on("click", ".chooseItem_bin", function () {
   }
   item_code_array[this.id] = "";
   quantity[this.id] = 0;
+
+  console.log(item_code_array);
+  console.log(quantity);
   $(this).closest(".chooseItem").remove();
   console.log(item_code_array);
   calculatePrice();
@@ -115,12 +118,3 @@ $(document).on("blur", ".chooseItem_count", function () {
     calculatePrice();
   }
 });
-
-// let items = $(".chooseItem");
-// for (let index = 0; index < items.length; index++) {
-//   let exist = items[index].childNodes[1].childNodes[2].innerText;
-//   if (exist == item_code) {
-//     alreadyExist = true;
-//     console.log("good");
-//   }
-// }
